@@ -153,9 +153,56 @@ const states = [
     ],
   },
 ];
-
 function App() {
-  return <div id="main"></div>;
+  const [isOpenStateIndex, setIsOpenStateIndex] = useState(-1);
+  const [isOpenCityIndex, setIsOpenCityIndex] = useState(-1);
+
+  const toggleStateList = (index) => {
+    console.log("rst");
+    setIsOpenStateIndex((prevIndex) => (prevIndex === index ? -1 : index));
+  };
+
+  const toggleCityList = (stateIndex, cityIndex) => {
+    if (isOpenStateIndex === stateIndex) {
+      setIsOpenCityIndex((prevIndex) =>
+        prevIndex === cityIndex ? -1 : cityIndex
+      );
+    } else {
+      setIsOpenStateIndex(stateIndex);
+      setIsOpenCityIndex(cityIndex);
+    }
+  };
+
+  return (
+    <div id="main">
+      <ul>
+        {states.map((state, stateIndex) => (
+          <li key={stateIndex} onClick={() => toggleStateList(stateIndex)}>
+            {state.name}
+            {isOpenStateIndex === stateIndex && (
+              <ul>
+                {state.cities.map((city, cityIndex) => (
+                  <li
+                    key={cityIndex}
+                    onClick={() => toggleCityList(stateIndex, cityIndex)}
+                  >
+                    {city.name}
+                    {isOpenCityIndex === cityIndex && (
+                      <ul>
+                        {city.towns.map((town, townIndex) => (
+                          <li key={townIndex}>{town.name}</li>
+                        ))}
+                      </ul>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
 }
 
 export default App;
